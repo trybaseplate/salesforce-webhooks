@@ -71,6 +71,10 @@
     "label": "Contract",
     "name": "Contract"
   },
+  { 
+    "label": "Content Document Link",
+    "name": "ContentDocumentLink"
+  },
   {
     "label": "D&B Company",
     "name": "DandBCompany"
@@ -84,8 +88,20 @@
     "name": "DataUsePurpose"
   },
   {
+    "label": "Email Message",
+    "name": "EmailMessage"
+  },
+  {
     "label": "Engagement Channel Type",
     "name": "EngagementChannelType"
+  },
+  {
+    "label": "Event",
+    "name": "Event"
+  },
+  {
+    "label": "Feed Item",
+    "name": "FeedItem"
   },
   {
     "label": "Individual",

@@ -68,6 +68,13 @@ public with sharing class {{name}} {
             'IsActive',
             'ManagerId',
             'UserRoleId'
+        },
+        'EmailMessage' => new Set<String> {
+            'ParentId',   
+            'ActivityId'
+        },
+        'FeedItem' => new Set<String> {
+            'LastEditById'
         }
     };
 
@@ -75,6 +82,20 @@ public with sharing class {{name}} {
     public static Map<String, Set<String>> IncludedFields = new Map<String, Set<String>> {
         'ContentVersion' => new Set<String> {
             'ContentUrl'
+        },
+        'EmailMessage' => new Set<String> {
+            'Headers',
+            'HtmlBody',
+            'Subject',
+            'EmailTemplateId'
+        },
+        'Event' => new Set<String> {
+            'DurationInMinutes',
+            'ActivityDateTime'
+        },
+        'ContentDocumentLink' => new Set<String> {
+            'ContentDocumentId',
+            'LinkedEntityId'
         }
     };
 
@@ -316,6 +337,23 @@ public with sharing class {{name}} {
                 // Picklist goes first, since we potential values are ready to be grabbed,
                 // and we can't really use any other value anyways.
                 obj.put(field, getDefaultPicklistValue(obj, fieldDescribe));
+            } else if (fieldDescribe.getName().endsWith('HtmlBody') && isIncludedField(obj, fieldDescribe)) {
+                // insert some header and footer to the email body
+                String value = String.format(
+                    '<html><body>test{0}</body></html>',
+                    new List<String> {
+                        counter.format()
+                    }
+                );
+                obj.put(field, value);
+            } else if (fieldDescribe.getName().endsWith('EmailTemplateId') && isIncludedField(obj, fieldDescribe)) {
+                {{!-- // Create an Email Template and add it as EmailTemplateId --}}
+                EmailTemplate emailTemplate = [
+                    SELECT Id
+                    FROM EmailTemplate
+                    limit 1
+                ];
+                obj.put(field, emailTemplate.Id);
             } else if (fieldDescribe.getName().endsWith('Country')) {
                 obj.put(field, DefaultCountry);
             } else if (fieldDescribe.getName().endsWith('State')) {
@@ -400,6 +438,22 @@ public with sharing class {{name}} {
                 Integer valueLength = Math.min(maxLength, preliminaryValue.length());
                 String value = preliminaryValue.substring(0, valueLength);
                 obj.put(field, value);
+            } else if (fieldDescribe.getName().endsWith('ContentDocumentId') && isIncludedField(obj, fieldDescribe)) {
+                String referenceObjectType = 'ContentVersion';
+                SObject reference = createSObject(referenceObjectType, cascade, counter + 1, false);
+                // Write a soql query to get the ContentDocumentId from Content Version
+                ContentVersion contentVersion = [
+                    SELECT Id,ContentDocumentId
+                    FROM ContentVersion
+                    WHERE Id = :reference.Id
+                ];
+                obj.put(field, contentVersion.ContentDocumentId);
+            } else if (fieldDescribe.getName().endsWith('LinkedEntityId') && isIncludedField(obj, fieldDescribe)) {
+                // Do nothing for LinkedEntityId
+                // Create a new Account to link the ContentDocument to
+                Account newAccount = new Account(Name = 'Test Account ' + counter);
+                insert newAccount;
+                obj.put(field, newAccount.Id);
             } else if (fieldDescribe.getType() == Schema.DisplayType.Reference) {
                 String referenceObjectType = fieldDescribe.getReferenceTo()[0].getDescribe().getName();
 
@@ -412,7 +466,8 @@ public with sharing class {{name}} {
                 } else if (
                     cascade &&
                     referenceObjectType != obj.getSObjectType().getDescribe().getName() &&
-                    referenceObjectType != 'BusinessHours'
+                    referenceObjectType != 'BusinessHours' &&
+                    referenceObjectType != 'ContentDocument'
                 ) {
                     System.debug(
                         String.format(

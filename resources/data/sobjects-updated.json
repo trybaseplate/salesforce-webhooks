@@ -67,6 +67,10 @@
     "label": "Contact Request",
     "name": "ContactRequest"
   },
+  { 
+    "label": "Content Document Link",
+    "name": "ContentDocumentLink"
+  },
   {
     "label": "Content Version",
     "name": "ContentVersion"
@@ -88,8 +92,20 @@
     "name": "DataUsePurpose"
   },
   {
+    "label": "Email Message",
+    "name": "EmailMessage"
+  },
+  {
     "label": "Engagement Channel Type",
     "name": "EngagementChannelType"
+  },
+  {
+    "label": "Event",
+    "name": "Event"
+  },
+  {
+    "label": "Feed Item",
+    "name": "FeedItem"
   },
   {
     "label": "Individual",

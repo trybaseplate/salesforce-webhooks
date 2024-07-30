@@ -52,8 +52,16 @@
     "name": "ContactPointTypeConsentChangeEvent"
   },
   {
+    "label": "Content Document Link Change Event",
+    "name": "ContentDocumentLinkChangeEvent"
+  },
+  {
     "label": "Contract Change Event",
     "name": "ContractChangeEvent"
+  },
+  {
+    "label": "Email Message Change Event",
+    "name": "EmailMessageChangeEvent"
   },
   {
     "label": "Individual Change Event",
