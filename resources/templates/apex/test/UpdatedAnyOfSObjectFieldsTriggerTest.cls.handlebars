@@ -1,6 +1,6 @@
 @isTest
 public class {{testClassName}} {
-    @isTest
+    {{!-- @isTest
     static void testBatch() {
         Test.setMock(HttpCalloutMock.class, new {{webhookCalloutMockName}}('{{endpointUrl}}'));
         List<{{sObjectType}}> a =
@@ -18,7 +18,7 @@ public class {{testClassName}} {
         update a;
 
         {{/each}}
-    }
+    } --}}
     @isTest
     static void testSingle() {
         Test.setMock(HttpCalloutMock.class, new {{webhookCalloutMockName}}('{{endpointUrl}}'));

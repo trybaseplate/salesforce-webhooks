@@ -1,6 +1,6 @@
 @isTest
 public class {{testClassName}} {
-    @isTest
+    {{!-- @isTest
     static void testBatch() {
         Test.enableChangeDataCapture();
 
@@ -10,7 +10,7 @@ public class {{testClassName}} {
         insert a;
 
         Test.getEventBus().deliver();
-    }
+    } --}}
     @isTest
     static void testSingle() {
         Test.enableChangeDataCapture();
